@@ -87,12 +87,12 @@ export default class SDR {
         var a = 1 << i; // word to clear to existing
         this.data[b] = (this.data[b] || 0) & ~a;
     }
-    public toString() {
+    public toString(wordSeparator: string = '') {
         return [].slice.call(this.data).map((d, i) => {
             //cut last word to length
-            var l = (i == this.data.length - 1) ? (this.size & 31) : 32;
+            var l = (i == this.data.length - 1) ? (this.size & 31) || 32 : 32;
             return leftPad(d.toString(2), l, '0').split('').reverse().join('')
-        }).join(' ');
+        }).join(wordSeparator);
     }
 
     get population(): number {

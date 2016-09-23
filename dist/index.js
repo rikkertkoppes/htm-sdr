@@ -73,12 +73,13 @@ var SDR = (function () {
         var a = 1 << i;
         this.data[b] = (this.data[b] || 0) & ~a;
     };
-    SDR.prototype.toString = function () {
+    SDR.prototype.toString = function (wordSeparator) {
         var _this = this;
+        if (wordSeparator === void 0) { wordSeparator = ''; }
         return [].slice.call(this.data).map(function (d, i) {
-            var l = (i == _this.data.length - 1) ? (_this.size & 31) : 32;
+            var l = (i == _this.data.length - 1) ? (_this.size & 31) || 32 : 32;
             return leftPad(d.toString(2), l, '0').split('').reverse().join('');
-        }).join(' ');
+        }).join(wordSeparator);
     };
     Object.defineProperty(SDR.prototype, "population", {
         get: function () {

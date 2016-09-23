@@ -39,9 +39,17 @@ describe('toString', function() {
         var sdr = new SDR(2,[0]);
         expect(sdr.toString()).to.equal('10');
     });
-    it('separate words of 32', function() {
+    it('should cut to the actual length', function() {
+        var sdr = new SDR(32,[0]);
+        expect(sdr.toString()).to.equal('10000000000000000000000000000000');
+    });
+    it('should not separate words of 32', function() {
         var sdr = new SDR(34,[0,3]);
-        expect(sdr.toString()).to.equal('10010000000000000000000000000000 00');
+        expect(sdr.toString()).to.equal('1001000000000000000000000000000000');
+    });
+    it('should separate with a custom separator', function() {
+        var sdr = new SDR(34,[0,3]);
+        expect(sdr.toString('|')).to.equal('10010000000000000000000000000000|00');
     });
 })
 
@@ -75,21 +83,7 @@ describe('getting and setting', function() {
 describe('construction with indices', function() {
     it('should set the first 4 bits', function() {
         var sdr = new SDR(16,[0,1,2,3]);
-        expect(sdr.get(0)).to.equal(1);
-        expect(sdr.get(1)).to.equal(1);
-        expect(sdr.get(2)).to.equal(1);
-        expect(sdr.get(3)).to.equal(1);
-        expect(sdr.get(4)).to.equal(0);
-        expect(sdr.get(5)).to.equal(0);
-        expect(sdr.get(6)).to.equal(0);
-        expect(sdr.get(7)).to.equal(0);
-        expect(sdr.get(8)).to.equal(0);
-        expect(sdr.get(10)).to.equal(0);
-        expect(sdr.get(11)).to.equal(0);
-        expect(sdr.get(12)).to.equal(0);
-        expect(sdr.get(13)).to.equal(0);
-        expect(sdr.get(14)).to.equal(0);
-        expect(sdr.get(15)).to.equal(0);
+        expect(sdr.toString()).to.equal('1111000000000000');
     })
 })
 
@@ -98,9 +92,9 @@ describe('union', function() {
         var a = new SDR(16,[0,1]);
         var b = new SDR(16,[0,2]);
         var c = SDR.union(a,b);
-        expect(c.get(0)).to.equal(1);
-        expect(c.get(1)).to.equal(1);
-        expect(c.get(2)).to.equal(1);
+        expect(a.toString()).to.equal('1100000000000000');
+        expect(b.toString()).to.equal('1010000000000000');
+        expect(c.toString()).to.equal('1110000000000000');
         expect(c.population).to.equal(3);
         expect(c.size).to.equal(16);
     })
@@ -111,9 +105,9 @@ describe('overlap', function() {
         var a = new SDR(16,[0,1]);
         var b = new SDR(16,[0,2]);
         var c = SDR.overlap(a,b);
-        expect(c.get(0)).to.equal(1);
-        expect(c.get(1)).to.equal(0);
-        expect(c.get(2)).to.equal(0);
+        expect(a.toString()).to.equal('1100000000000000');
+        expect(b.toString()).to.equal('1010000000000000');
+        expect(c.toString()).to.equal('1000000000000000');
         expect(c.population).to.equal(1);
         expect(c.size).to.equal(16);
     })
